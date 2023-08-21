@@ -1,15 +1,34 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { Provider } from 'react-redux';
+import { createRoot } from 'react-dom/client';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import store from './store';
+
 import './index.css';
-import App from './App';
+
+import Root from './routes';
+import Snake from './routes/snake/index'
+
 import reportWebVitals from './reportWebVitals';
 
-const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
-);
+const container = document.getElementById('root')!;
+const root = createRoot(container);
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <Root />,
+  },
+  {
+    path: '/snake',
+    element: <Snake/>
+  }
+])
 root.render(
   <React.StrictMode>
-    <App />
+    <Provider store={store}>
+      <RouterProvider router={router} />
+    </Provider>
   </React.StrictMode>
 );
 
