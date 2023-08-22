@@ -1,13 +1,13 @@
 import { createReducer, current } from '@reduxjs/toolkit';
 import { 
-  RIGHT,
-  UP,
-  DOWN, 
-  LEFT,
-  makeMove, 
+  
   ISnakeCoord,
   SET_DISALLOWED_DIRECTION,
   MOVE_RIGHT,
+  MOVE_LEFT,
+  MOVE_DOWN,
+  MOVE_UP
+
  } from "../../actions/snake";
 
 export interface IBoardState {
@@ -29,6 +29,45 @@ export const boardState: IBoardState = {
 const snakeReducer = createReducer(boardState, (builder) => {
   builder
   .addCase(MOVE_RIGHT, (state, action) => {
+    let newSnake = [...state.snake];
+    newSnake = [{
+      x: state.snake[0].x + action.payload.dx,
+      y: state.snake[0].y + action.payload.dy,
+    }, ...newSnake];
+    newSnake.pop();
+
+    return {
+      ...state,
+      snake: newSnake
+    }
+  })
+  .addCase(MOVE_LEFT, (state, action) => {
+    let newSnake = [...state.snake];
+    newSnake = [{
+      x: state.snake[0].x + action.payload.dx,
+      y: state.snake[0].y + action.payload.dy,
+    }, ...newSnake];
+    newSnake.pop();
+
+    return {
+      ...state,
+      snake: newSnake
+    }
+  })
+  .addCase(MOVE_DOWN, (state, action) => {
+    let newSnake = [...state.snake];
+    newSnake = [{
+      x: state.snake[0].x + action.payload.dx,
+      y: state.snake[0].y + action.payload.dy,
+    }, ...newSnake];
+    newSnake.pop();
+
+    return {
+      ...state,
+      snake: newSnake
+    }
+  })
+  .addCase(MOVE_UP, (state, action) => {
     let newSnake = [...state.snake];
     newSnake = [{
       x: state.snake[0].x + action.payload.dx,

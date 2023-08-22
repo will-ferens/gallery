@@ -5,7 +5,7 @@ import {
   PutEffect,
   takeLatest,
 } from "redux-saga/effects";
-import { DOWN, ISnakeCoord, LEFT, RIGHT, SET_DISALLOWED_DIRECTION, UP } from "../../actions/snake";
+import { DOWN, ISnakeCoord, LEFT, makeMove, RIGHT, SET_DISALLOWED_DIRECTION, UP } from "../../actions/snake";
 
 export function* moveSaga(params: {
   type: string;
@@ -17,11 +17,12 @@ export function* moveSaga(params: {
 > {
   while (true) {
     yield put({
-      type: params.type.split("/")[1],
+      type: params.type.split("/")[1].toUpperCase(),
       payload: params.payload,
     });
-    switch (params.type.split("/")[1]) {
-      case 'right':
+    switch (params.type.split("/")[1].toUpperCase()) {
+      case RIGHT:
+        // yield put(makeMove(20, 0, LEFT))
         yield put(SET_DISALLOWED_DIRECTION(LEFT));
         break;
 

@@ -4,10 +4,6 @@ import { useRef, useState, useEffect, useCallback } from 'react';
 import { RootState } from '../../store';
 import { 
   makeMove, 
-  MOVE_DOWN, 
-  MOVE_LEFT, 
-  MOVE_RIGHT, 
-  MOVE_UP
 } from '../../store/actions/snake';
 
 import { 
@@ -91,7 +87,8 @@ const CanvasBoard = ({ height, width }: ICanvasBoard) => {
     clearBoard(context);
     drawObject(context, snake1, '#91C483'); //Draws snake at the required position
 		drawObject(context, [position], '#676FA3'); //Draws fruit randomly
-  }, [context]);
+    window.addEventListener("keypress", handleKeyEvents);
+  }, [context, dispatch, handleKeyEvents, height, snake1, width]);
 
   useEffect(() => {
     window.addEventListener('keypress', handleKeyEvents);
