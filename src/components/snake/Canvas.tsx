@@ -38,20 +38,19 @@ const CanvasBoard = ({ height, width }: ICanvasBoard) => {
   const moveSnake = useCallback(
     (dx = 0, dy = 0, ds: string) => {
       if (dx > 0 && dy === 0 && ds !== 'RIGHT') {
-        console.log('here')
-        dispatch(makeMove(dx, dy, MOVE_RIGHT));
+        dispatch(makeMove(dx, dy, 'move/right'));
       }
 
       if (dx < 0 && dy === 0 && ds !== 'LEFT') {
-        dispatch(makeMove(dx, dy, MOVE_LEFT));
+        dispatch(makeMove(dx, dy, 'move/left'));
       }
 
       if (dx === 0 && dy < 0 && ds !== 'UP') {
-        dispatch(makeMove(dx, dy, MOVE_UP));
+        dispatch(makeMove(dx, dy, 'move/up'));
       }
 
       if (dx === 0 && dy > 0 && ds !== 'DOWN') {
-        dispatch(makeMove(dx, dy, MOVE_DOWN));
+        dispatch(makeMove(dx, dy, 'move/down'));
       }
     },
     [dispatch]
@@ -59,11 +58,9 @@ const CanvasBoard = ({ height, width }: ICanvasBoard) => {
 
   const handleKeyEvents = useCallback(
     (event: KeyboardEvent) => {
-
       if(disallowedDirection) {
         switch (event.key) {
           case 'w':
-            console.log(disallowedDirection)
             moveSnake(0, -20, disallowedDirection);
             break;
           case 's':
@@ -84,7 +81,6 @@ const CanvasBoard = ({ height, width }: ICanvasBoard) => {
           disallowedDirection !== 'DOWN' &&
           event.key === 'd'
         )
-        console.log(disallowedDirection)
         moveSnake(20, 0, disallowedDirection); //Move RIGHT at start
       }
     },

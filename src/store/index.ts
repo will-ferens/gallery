@@ -1,13 +1,15 @@
 import createSagaMiddleware from '@redux-saga/core';
 import { configureStore } from '@reduxjs/toolkit';
-import rootReducers from './root';
+import reducer from './root';
 import watcherSagas from './sagas/snake';
 
 const sagaMiddleware = createSagaMiddleware();
+const middleware = [sagaMiddleware];
 
 const store = configureStore({
-  reducer: rootReducers,
-  middleware: [sagaMiddleware],
+  reducer,
+  middleware: (getDefaultMiddleware) =>
+  getDefaultMiddleware().concat(middleware),
   devTools: true
 });
 

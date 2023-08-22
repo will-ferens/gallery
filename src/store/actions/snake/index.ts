@@ -1,20 +1,30 @@
-export const MOVE_RIGHT = "MOVE_RIGHT";
-export const MOVE_LEFT = "MOVE_LEFT";
-export const MOVE_UP = "MOVE_UP";
-export const MOVE_DOWN = "MOVE_DOWN";
+import { MoveAction, DisallowedDirection } from './types/index'
+import { createAction } from "@reduxjs/toolkit";
 
-export const RIGHT = "RIGHT";
-export const LEFT = "LEFT";
-export const UP = "UP";
-export const DOWN = "DOWN";
 
-export const SET_DISALLOWED_DIRECTION = 'SET_DISALLOWED_DIRECTION';
+function withPayloadType<T>() {
+  return (t: T) => ({ payload: t })
+}
 
-export const RESET = "RESET";
-export const STOP_GAME = "STOP_GAME";
-export const INCREASE_SNAKE = "INCREASE_SNAKE";
-export const INCREMENT_SCORE = "INCREMENT_SCORE";
-export const RESET_SCORE = "RESET_SCORE";
+export const MOVE_RIGHT = createAction('move/right', withPayloadType<MoveAction>());
+export const MOVE_LEFT = createAction('move/left', withPayloadType<MoveAction>());
+export const MOVE_UP = createAction('move/up', withPayloadType<MoveAction>());
+export const MOVE_DOWN = createAction('move/down', withPayloadType<MoveAction>());
+
+export const SET_DISALLOWED_DIRECTION = createAction('setDisallowedDirection', withPayloadType<string>());
+
+export const RIGHT = 'RIGHT';
+export const LEFT = 'LEFT';
+export const UP = 'UP';
+export const DOWN = 'DOWN';
+
+
+
+export const RESET = 'RESET';
+export const STOP_GAME = 'STOP_GAME';
+export const INCREASE_SNAKE = 'INCREASE_SNAKE';
+export const INCREMENT_SCORE = 'INCREMENT_SCORE';
+export const RESET_SCORE = 'RESET_SCORE';
 
 export interface ISnakeCoord {
   x: number;
@@ -23,10 +33,8 @@ export interface ISnakeCoord {
 
 export const makeMove = (dx: number, dy: number, move: string) => ({
   type: move,
-  payload: [dx, dy]
+  payload: {
+    dx: dx,
+    dy: dy
+  }
 });
-
-export const setDisallowedDirection = (direction: string) => ({
-  type: SET_DISALLOWED_DIRECTION,
-  payload: direction
-})

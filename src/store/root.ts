@@ -1,11 +1,7 @@
 import  snakeReducer from './reducers/snake';
 
-export type StateType = {
-
-};
-
-const rootReducers = {
+const reducer = {
   snakeReducer
 };
 
-export default rootReducers;
+export default reducer;

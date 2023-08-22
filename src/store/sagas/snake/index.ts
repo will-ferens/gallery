@@ -5,7 +5,7 @@ import {
   PutEffect,
   takeLatest,
 } from "redux-saga/effects";
-import { DOWN, ISnakeCoord, LEFT, MOVE_DOWN, MOVE_LEFT, MOVE_RIGHT, MOVE_UP, RIGHT, setDisallowedDirection, UP } from "../../actions/snake";
+import { DOWN, ISnakeCoord, LEFT, RIGHT, SET_DISALLOWED_DIRECTION, UP } from "../../actions/snake";
 
 export function* moveSaga(params: {
   type: string;
@@ -17,31 +17,34 @@ export function* moveSaga(params: {
 > {
   while (true) {
     yield put({
-      type: params.type,
-      payload: params.payload
+      type: params.type.split("/")[1],
+      payload: params.payload,
     });
+    switch (params.type.split("/")[1]) {
+      case 'right':
+        yield put(SET_DISALLOWED_DIRECTION(LEFT));
+        break;
 
-    switch (params.type) { 
-      case RIGHT:
-        yield put(setDisallowedDirection(LEFT));
-        break;
       case LEFT:
-        yield put(setDisallowedDirection(RIGHT));
+        yield put(SET_DISALLOWED_DIRECTION(RIGHT));
         break;
+
       case UP:
-        yield put(setDisallowedDirection(DOWN));
+        yield put(SET_DISALLOWED_DIRECTION(DOWN));
         break;
+
       case DOWN:
-        yield put(setDisallowedDirection(UP));
+        yield put(SET_DISALLOWED_DIRECTION(UP));
         break;
     }
     yield delay(100);
   }
 }
 
+
 function* watcherSagas() {
   yield takeLatest(
-    [MOVE_RIGHT, MOVE_LEFT, MOVE_UP, MOVE_DOWN],
+    ['move/right', 'move/left', 'move/up', 'move/down'],
     moveSaga
   )
 }

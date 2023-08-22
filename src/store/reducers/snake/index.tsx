@@ -1,4 +1,4 @@
-import { createReducer } from '@reduxjs/toolkit';
+import { createReducer, current } from '@reduxjs/toolkit';
 import { 
   RIGHT,
   UP,
@@ -26,43 +26,27 @@ export const boardState: IBoardState = {
   disallowedDirection: ''
 };
 
-const snakeReducer = (state = boardState, action: any) => {
-  switch(action) {
-    case RIGHT:
-    case LEFT:
-    case UP:
-    case DOWN: {
-      let newSnake = [...state.snake];
-      newSnake = [{
-        x: state.snake[0].x + action.payload[0],
-        y: state.snake[0].y + action.payload[1],
-      }, ...newSnake];
-      newSnake.pop();
+const snakeReducer = createReducer(boardState, (builder) => {
+  builder
+  .addCase(MOVE_RIGHT, (state, action) => {
+    let newSnake = [...state.snake];
+    newSnake = [{
+      x: state.snake[0].x + action.payload.dx,
+      y: state.snake[0].y + action.payload.dy,
+    }, ...newSnake];
+    newSnake.pop();
 
-      return {
-        ...state,
-        snake: newSnake,
-      };
+    return {
+      ...state,
+      snake: newSnake
     }
-    case SET_DISALLOWED_DIRECTION:
-      return { ...state, disallowedDirection: action.payload };
-    default:
-      return state;
-  }
- 
-}
+  })
+  .addCase(SET_DISALLOWED_DIRECTION,  (state, action) => { 
+    return {
+      ...state, 
+      disallowedDirection: action.payload
+    }
+  })
+})
 
-// const snakeReducer = createReducer(boardState, (builder) => {
-//   builder
-//   .addCase(MOVE_RIGHT, (state, action) => {
-//     let newSnake = [...state.snake];
-//     newSnake = [{
-//       x: state.snake[0].x + action.payload[0],
-//       y: state.snake[0].y + action.payload[1],
-//     }, ...newSnake];
-//     newSnake.pop();
-//     return {... state}
-//   })
-// })
-
-export default snakeReducer
+export default snakeReducer;
