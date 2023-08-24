@@ -11,6 +11,7 @@ export const MOVE_LEFT = createAction('move/left', withPayloadType<MoveAction>()
 export const MOVE_UP = createAction('move/up', withPayloadType<MoveAction>());
 export const MOVE_DOWN = createAction('move/down', withPayloadType<MoveAction>());
 
+
 export const SET_DISALLOWED_DIRECTION = createAction('setDisallowedDirection', withPayloadType<string>());
 
 export const RIGHT = 'RIGHT';
@@ -19,12 +20,12 @@ export const UP = 'UP';
 export const DOWN = 'DOWN';
 
 
+export const RESET = createAction('reset/game');
+export const STOP_GAME = createAction('stop/game');
 
-export const RESET = 'RESET';
-export const STOP_GAME = 'STOP_GAME';
-export const INCREASE_SNAKE = 'INCREASE_SNAKE';
-export const INCREMENT_SCORE = 'INCREMENT_SCORE';
-export const RESET_SCORE = 'RESET_SCORE';
+export const INCREASE_SNAKE = createAction('increase/snake');
+export const INCREMENT_SCORE = createAction('increment/score');
+export const RESET_SCORE = createAction('reset/score');
 
 export interface ISnakeCoord {
   x: number;

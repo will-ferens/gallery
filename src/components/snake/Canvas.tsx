@@ -3,14 +3,17 @@ import { useRef, useState, useEffect, useCallback } from 'react';
 
 import { RootState } from '../../store';
 import { 
+  INCREASE_SNAKE,
   makeMove, 
+  STOP_GAME,
 } from '../../store/actions/snake';
 
 import { 
   IObjectBody, 
   clearBoard, 
   drawObject, 
-  generateRandomPosition
+  generateRandomPosition,
+  hasSnakeCollided
 } from '../../utils/snake';
 
 export interface ICanvasBoard {
@@ -27,6 +30,9 @@ const CanvasBoard = ({ height, width }: ICanvasBoard) => {
   const [position, setPos] = useState<IObjectBody>(
     generateRandomPosition(width - 20, height -20)
   );
+  const [isConsumed, setIsConsumed] = useState<boolean>(false);
+  
+  const [gameEnded, setGameEnded] = useState<boolean>(false);
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 	const [context, setContext] = useState<CanvasRenderingContext2D | null>(null);
@@ -82,13 +88,41 @@ const CanvasBoard = ({ height, width }: ICanvasBoard) => {
     },
     [disallowedDirection, moveSnake]
   )
+
+  useEffect(() => {
+    if(isConsumed) {
+      const fruitPosition = generateRandomPosition(width - 20, height - 20);
+      setPos(fruitPosition);
+      setIsConsumed(false);
+
+      dispatch(INCREASE_SNAKE());
+    }
+  }, [isConsumed, position, height, width, dispatch]);
+
   useEffect(() => {
     setContext(canvasRef.current && canvasRef.current.getContext('2d'));
     clearBoard(context);
     drawObject(context, snake1, '#91C483'); //Draws snake at the required position
 		drawObject(context, [position], '#676FA3'); //Draws fruit randomly
+
+     //When the object is consumed
+     if (snake1[0].x === position?.x && snake1[0].y === position?.y) {
+      setIsConsumed(true);
+    }
+
+    if (
+      hasSnakeCollided(snake1, snake1[0]) ||
+      snake1[0].x >= width ||
+      snake1[0].x <= 0 ||
+      snake1[0].y <= 0 ||
+      snake1[0].y >= height
+    ) {
+      setGameEnded(true);
+      console.log(STOP_GAME.type);
+      dispatch(STOP_GAME);
+    }
     window.addEventListener("keypress", handleKeyEvents);
-  }, [context, dispatch, handleKeyEvents, height, snake1, width]);
+  }, [context, position, dispatch, handleKeyEvents, height, snake1, width]);
 
   useEffect(() => {
     window.addEventListener('keypress', handleKeyEvents);

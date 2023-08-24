@@ -6,13 +6,17 @@ import {
   MOVE_RIGHT,
   MOVE_LEFT,
   MOVE_DOWN,
-  MOVE_UP
+  MOVE_UP,
+  INCREASE_SNAKE,
+  RESET_SCORE,
+  INCREMENT_SCORE
 
  } from "../../actions/snake";
 
 export interface IBoardState {
   snake: ISnakeCoord[] | [];
   disallowedDirection: string;
+  score: number;
 }
 
 export const boardState: IBoardState = {
@@ -23,7 +27,8 @@ export const boardState: IBoardState = {
     { x: 520, y: 300 },
     { x: 500, y: 300 },
   ],
-  disallowedDirection: ''
+  disallowedDirection: '',
+  score: 0
 };
 
 const snakeReducer = createReducer(boardState, (builder) => {
@@ -85,6 +90,29 @@ const snakeReducer = createReducer(boardState, (builder) => {
       ...state, 
       disallowedDirection: action.payload
     }
+  })
+  .addCase(INCREASE_SNAKE, (state, action) => {
+    const snakeLength = state.snake.length;
+    return {
+      ...state,
+      snake: [
+        ...state.snake,
+        {
+          x: state.snake[snakeLength - 1].x - 20,
+          y: state.snake[snakeLength - 1].y - 20
+        }
+      ]
+
+    }
+  })
+  .addCase(RESET_SCORE, (state, _) => {
+    return { ...state, score: 0 };
+  })
+  .addCase(INCREMENT_SCORE, (state, _) => {
+    return {
+      ...state,
+      score: state.score + 1,
+    };
   })
 })
 
