@@ -1,7 +1,5 @@
-import { ISnakeCoord } from "./SnakeCoord";
+import { ISnake } from "./Snake";
 export interface IGameState {
-  snake: ISnakeCoord[] | [];
-  direction: string;
-  disallowedDirection: string;
+  snake: ISnake;
   score: number;
 }
