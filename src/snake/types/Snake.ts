@@ -1,13 +1,14 @@
-type SnakeCell = {
+type Cell = {
   x: number;
   y: number;
 }
+
 export interface ISnake {
-  x: number;
-  y: number;
   dx: number;
   dy: number;
-  cells: SnakeCell[];
-  maxCells: 4;
+  cells: Cell[];
+  maxCells: number;
+  changingDirection: boolean
+  foodPosition: Cell
 }
 

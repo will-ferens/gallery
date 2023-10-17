@@ -8,7 +8,7 @@ export const snake = (canvas: HTMLCanvasElement) => {
   const context = canvas.getContext('2d');
   if(context) {
     const snakeGame = new Snake(canvas);
+    snakeGame.handleInput();
     snakeGame.start();
-    // requestAnimationFrame(loop);
   }
 }
