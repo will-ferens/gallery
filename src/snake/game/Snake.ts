@@ -3,6 +3,7 @@ import { INITIAL_SNAKE } from '../constants/initial-snake';
 import { SNAKE_HEX } from '../constants/colors';
 import { ISnake } from '../types/Snake';
 import { generateRandom } from '../util/generate-random';
+import { snake } from '..';
 
 export class Snake {
   private canvas: HTMLCanvasElement;
@@ -32,49 +33,79 @@ export class Snake {
   }
   private drawObject(
     context: CanvasRenderingContext2D,
-    objectBody: ISnake['cells'],
     fillColor: string,
-    strokeStyle = '#146356'
+    strokeStyle: string,
+    objectBody: ISnake['cells'] | ISnake['foodPosition'],
   ) {
-    if(context) {
-      objectBody.forEach((obj) => {
+      if(!context) return;
+      const draw = (obj: { x: number, y: number }) => {
         context.fillStyle = fillColor;
         context.strokeStyle = strokeStyle;
         context?.fillRect(obj.x, obj.y, 20, 20);
         context?.strokeRect(obj.x, obj.y, 20, 20);
-      });
-    }
+      }
+      if(Array.isArray(objectBody)) {
+        objectBody.forEach(draw);
+      } else {
+        draw(objectBody);
+      }
   }
 
   private moveSnake() {
+    const { cells } = this.state.snake;
     const { snake } = this.state;
-    const head = {x: snake.cells[0].x + snake.dx, y: snake.cells[0].y + snake.dy};
-    snake.cells.unshift(head);
-    snake.cells.pop();
+    const head = {x: cells[0].x + snake.dx, y: cells[0].y + snake.dy};
+    cells.unshift(head);
+    const foodCollision = cells[0].x === snake.foodPosition.x && cells[0].y === snake.foodPosition.y;
+    if(foodCollision) {
+      this.state.score += 10;
+      this.spawnFood();
+    } else {
+      cells.pop();
+    }
   }
 
-  private spawnFood() {
-    const { snake } = this.state;
-    snake.foodPosition.x = generateRandom(0, this.canvas.width - 20);
-    snake.foodPosition.y = generateRandom(0, this.canvas.height - 20);
-
-    
-  }
   private gameLoop() {
     if(this.context) {
+      if (this.hasGameEnded()) return;
+
       this.state.snake.changingDirection = false;
       this.clearBoard(this.context);
-      this.spawnFood();
       this.moveSnake();
-      this.drawObject(this.context, this.state.snake.cells, SNAKE_HEX);
+      this.drawObject(this.context, SNAKE_HEX, '#146356', this.state.snake.cells,);
+      this.drawObject(this.context, SNAKE_HEX, '#146356', this.state.snake.foodPosition,);
     }
     setTimeout(this.gameLoop.bind(this), 300);
+  }
+
+  private hasGameEnded() {
+    const { cells } = this.state.snake;
+
+    for (let i = cells.length; i < cells.length; i++) {
+      const hasCollided = cells[i].x === cells[0].x && cells[i].y === cells[0].y;
+      if(hasCollided) return true
+    }
+    const hitLeftWall = cells[0].x < 0;  
+    const hitRightWall = cells[0].x > this.canvas.width - 10;
+    const hitToptWall = cells[0].y < 0;
+    const hitBottomWall = cells[0].y > this.canvas.height - 10;
+
+    return hitLeftWall ||  hitRightWall || hitToptWall || hitBottomWall
   }
 
   public start() {
     requestAnimationFrame(this.gameLoop.bind(this));
   }
-
+  public spawnFood() {
+    const { snake } = this.state;
+    snake.foodPosition.x = generateRandom(0, this.canvas.width - 20);
+    snake.foodPosition.y = generateRandom(0, this.canvas.height - 20);
+    if(this.context)
+    snake.cells.forEach(cell => {
+      const hasEaten = cell.x === snake.foodPosition.x && cell.y === snake.foodPosition.y;
+      if(hasEaten) this.spawnFood();
+    });
+  }
   public handleInput() {
     const handleKeyEvents = (event: KeyboardEvent) => {
       const { snake } = this.state;

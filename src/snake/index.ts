@@ -9,6 +9,7 @@ export const snake = (canvas: HTMLCanvasElement) => {
   if(context) {
     const snakeGame = new Snake(canvas);
     snakeGame.handleInput();
+    snakeGame.spawnFood();
     snakeGame.start();
   }
 }
